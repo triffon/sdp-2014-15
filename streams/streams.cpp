@@ -6,6 +6,7 @@
  */
 
 #include <iostream>
+#include <iomanip>
 #include <strstream>
 using namespace std;
 
@@ -79,11 +80,33 @@ void recovertest() {
 	cout << "Браво: " << d << endl;
 }
 
+ostream& bang(ostream& os) {
+	return os << setw(15) << setfill('!');
+}
+
+void manipulatortest() {
+	cout << setw(15) << setfill('!');
+	cout << 0.00000001 << endl;
+	cout << bang << 0.0001 << endl;
+
+	cout << setiosflags(ios::scientific);
+	cout << 0.00000001 << endl;
+	cout << 0.0001 << endl;
+	cout << resetiosflags(ios::scientific);
+
+
+	cout << setiosflags(ios::fixed);
+	cout << 0.00000001 << endl;
+	cout << 0.0001 << endl;
+
+}
+
 int main() {
 	// ostreams();
 	// istreams();
 	// peektest();
 	// failtest();
 	// recovertest();
+	manipulatortest();
 	return 0;
 }
