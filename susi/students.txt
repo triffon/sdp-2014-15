@@ -1,0 +1,4 @@
+40000 5.5  Ivan Petrov
+40002 6  Maria Ivanova
+40003 2  Georgi Georgiev
+40005 4.5  Tanya Ivanova
