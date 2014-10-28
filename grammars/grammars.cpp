@@ -8,6 +8,8 @@
 #include <iostream>
 using namespace std;
 
+#include "stack_automaton.h"
+
 bool matchTerminal(char const*& word, char t) {
 	if (*word == t) {
 		word++;
@@ -95,7 +97,15 @@ bool calculateE(char const*& word, double& result) {
 	}
 }
 
-int main() {
+void testStackAutomaton() {
+	StackAutomaton s;
+	s.addDelta('a', '#', "a");
+	s.addDelta('b', 'a', "b");
+	s.addDelta('c', 'b', "");
+	cout << s.recognize("abc") << endl;
+}
+
+void testGrammars() {
 	char word[100];
 	cin.getline(word, 100);
 	char const* p = word;
@@ -114,5 +124,10 @@ int main() {
 		cout << result << endl;
 	} else
 		cout << "ERROR!" << endl;
+}
+
+int main() {
+	// testGrammars();
+	testStackAutomaton();
 	return 0;
 }
