@@ -103,6 +103,8 @@ void testStackAutomaton() {
 	s.addDelta('b', 'a', "b");
 	s.addDelta('c', 'b', "");
 	cout << s.recognize("abc") << endl;
+	cout << s.recognize("ab") << endl;
+	cout << s.recognize("abcd") << endl;
 }
 
 void testGrammars() {

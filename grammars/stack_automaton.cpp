@@ -18,12 +18,11 @@ void StackAutomaton::addDelta(char input_char, char stack_char,
 
 void StackAutomaton::pushToStack(char const* sw) {
 	char const *p = sw;
-	while (*p) p++;
+	while (*p)
+		p++;
 	// p сочи към края на низа
-	do {
-		p--;
-		stack.push(*p);
-	} while (p != sw);
+	while (p != sw)
+		stack.push(*--p);
 }
 
 bool StackAutomaton::recognizeWithChars(char const* w, char a, char g) {
