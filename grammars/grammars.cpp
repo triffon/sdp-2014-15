@@ -128,8 +128,122 @@ void testGrammars() {
 		cout << "ERROR!" << endl;
 }
 
+struct Rule {
+	char LHS;
+	char const* RHS;
+};
+
+StackAutomaton buildAutomaton(Rule grammar[], int n) {
+	StackAutomaton sa(grammar[0].LHS);
+	// (1)
+	for(int i = 0; i < n; i++)
+		sa.addDelta(EPS, grammar[i].LHS, grammar[i].RHS);
+
+	// (2)
+	for(unsigned char c = 1; c < TABLE_SIZE; c++)
+		sa.addDelta(c, c, "");
+
+	return sa;
+}
+
+void testParentheses() {
+	Rule grammar[] = {
+						{ 'S', "(T)" },
+						{ 'T', "[U]" },
+						{ 'U', "{S}" },
+						{ 'S', "a" },
+						{ 'T', "a" },
+						{ 'U', "a" }
+	};
+	StackAutomaton sa = buildAutomaton(grammar, 6);
+	cout << sa.recognize("a") << endl;
+	sa.reset();
+	cout << sa.recognize("(a)") << endl;
+	sa.reset();
+	cout << sa.recognize("([{(a)}])") << endl;
+	sa.reset();
+	cout << sa.recognize("([a)]") << endl;
+}
+
+void testPN() {
+	Rule grammar[] = {
+							{ 'E', "+EE" },
+							{ 'E', "-EE" },
+							{ 'E', "*EE" },
+							{ 'E', "/EE" },
+							{ 'E', "0" },
+							{ 'E', "1" },
+							{ 'E', "2" },
+							{ 'E', "3" },
+							{ 'E', "4" },
+							{ 'E', "5" },
+							{ 'E', "6" },
+							{ 'E', "7" },
+							{ 'E', "8" },
+							{ 'E', "9" }
+		};
+	StackAutomaton sa = buildAutomaton(grammar, 14);
+	cout << sa.recognize("*+12-3/45") << endl;
+}
+
+void testArithmetic() {
+	Rule grammar[] = {
+			{ 'S', "S+T" },
+			{ 'S', "S-T" },
+			{ 'S', "T" },
+			{ 'T', "T*F" },
+			{ 'T', "T/F" },
+			{ 'T', "F" },
+			{ 'F', "(S)" },
+			{ 'F', "0" },
+			{ 'F', "1" },
+			{ 'F', "2" },
+			{ 'F', "3" },
+			{ 'F', "4" },
+			{ 'F', "5" },
+			{ 'F', "6" },
+			{ 'F', "7" },
+			{ 'F', "8" },
+			{ 'F', "9" }
+	};
+	StackAutomaton sa = buildAutomaton(grammar, 17);
+	cout << sa.recognize("(1+2)*(3-4/5)") << endl;
+}
+
+void testArithmeticLL1() {
+	Rule grammar[] = {
+			{ 'S', "TA" },
+			{ 'A', "+S" },
+			{ 'A', "-S" },
+			{ 'A', "" },
+			{ 'T', "FB" },
+			{ 'B', "*T" },
+			{ 'B', "/T" },
+			{ 'B', "" },
+			{ 'F', "(S)" },
+			{ 'F', "0" },
+			{ 'F', "1" },
+			{ 'F', "2" },
+			{ 'F', "3" },
+			{ 'F', "4" },
+			{ 'F', "5" },
+			{ 'F', "6" },
+			{ 'F', "7" },
+			{ 'F', "8" },
+			{ 'F', "9" }
+		};
+	StackAutomaton sa = buildAutomaton(grammar, 19);
+	cout << sa.recognize("1") << endl;
+	sa.reset();
+	cout << sa.recognize("(1+2)*(3-4/5)") << endl;
+}
+
 int main() {
 	// testGrammars();
-	testStackAutomaton();
+	// testStackAutomaton();
+	// testParentheses();
+	// testPN();
+	// testArithmetic();
+	testArithmeticLL1();
 	return 0;
 }
