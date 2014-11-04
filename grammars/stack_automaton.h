@@ -21,13 +21,15 @@ class StackAutomaton {
 private:
 	LinkedStack<char> stack;
 	LinkedStack<Word> delta[TABLE_SIZE][TABLE_SIZE];
+	char bottom;
 
 	void pushToStack(char const*);
 public:
-	StackAutomaton();
+	StackAutomaton(char = STACK_BOTTOM);
 	void addDelta(char, char, Word);
 	bool recognize(char const*);
 	bool recognizeWithChars(char const*, char, char);
+	void reset();
 };
 
 

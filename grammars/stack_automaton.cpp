@@ -7,8 +7,9 @@
 
 #include "stack_automaton.h"
 
-StackAutomaton::StackAutomaton() {
-	stack.push(STACK_BOTTOM);
+StackAutomaton::StackAutomaton(char _bottom) :
+	bottom(_bottom) {
+	reset();
 }
 
 void StackAutomaton::addDelta(char input_char, char stack_char,
@@ -57,4 +58,10 @@ bool StackAutomaton::recognize(char const* w) {
 	if (*w != '\0' && recognizeWithChars(w + 1, w[0], g))
 		return true;
 	return recognizeWithChars(w, EPS, g);
+}
+
+void StackAutomaton::reset() {
+	while (!stack.empty())
+		stack.pop();
+	stack.push(bottom);
 }
