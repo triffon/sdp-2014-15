@@ -32,7 +32,7 @@ bool StackAutomaton::recognizeWithChars(char const* w, char a, char g) {
 		// пробваме текущия преход
 		Word stack_word = transitions.pop();
 		pushToStack(stack_word.c_str());
-		if (recognize(w+1))
+		if (recognize(w))
 			// преходът е бил успешен!!!
 			// думата е разпозната
 			return true;
@@ -44,14 +44,17 @@ bool StackAutomaton::recognizeWithChars(char const* w, char a, char g) {
 }
 
 bool StackAutomaton::recognize(char const* w) {
-	if (*w == '\0')
-		return stack.empty();
+	if (stack.empty())
+		return *w == '\0';
+
+	// !stack.empty(), но може *w == '\0'
 
 	// махаме първия символ от стека
 	char g = stack.pop();
 
 	// опитваме преход с първия символ на думата
 	// опитваме епсилон преходите
-	return recognizeWithChars(w, w[0], g) ||
-		recognizeWithChars(w, EPS, g);
+	if (*w != '\0' && recognizeWithChars(w + 1, w[0], g))
+		return true;
+	return recognizeWithChars(w, EPS, g);
 }
