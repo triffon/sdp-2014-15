@@ -9,6 +9,8 @@
 #define LSTACK_CPP_
 
 #include <cstddef>
+#include <iostream>
+using namespace std;
 
 template <typename T>
 struct StackElement {
@@ -122,8 +124,10 @@ T LinkedStack<T>::last() const {
 
 template <typename T>
 T LinkedStack<T>::pop() {
-	if (empty())
+	if (empty()) {
+		cerr << "Trying to pop from an empty stack!\n";
 		return T();
+	}
 	// top != NULL
 	StackElement<T>* el = top;
 	top = top->next;
