@@ -1,0 +1,5 @@
+x="hello"
+y="world"
+z=x
+t=x+z
+#print(t)
