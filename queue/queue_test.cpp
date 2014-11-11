@@ -7,10 +7,13 @@
 
 #include <iostream>
 #include "squeue.cpp"
+#include "lqueue.cpp"
 using namespace std;
 
+typedef LQueue<int> TestQueue;
+
 void simpleQueueTest() {
-	SQueue<int> q;
+	TestQueue q;
 	for(int i = 1; i <= 20; i++)
 		q.push(i);
 	while (!q.empty())
@@ -19,7 +22,7 @@ void simpleQueueTest() {
 }
 
 void pushPopTest() {
-	SQueue<int> q;
+	TestQueue q;
 	for(int i = 1; i <= 1000; i++) {
 		q.push(i);
 		cout << q.pop() << endl;
