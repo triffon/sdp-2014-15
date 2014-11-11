@@ -16,14 +16,14 @@ RadoInterpreter::RadoInterpreter(const char* filename) :
 
 bool RadoInterpreter::matchTerminal(char c) {
 	char t;
-	return input >> t && c == t;
+	return input.get(t) && c == t;
 }
 
 bool RadoInterpreter::parseWord(char* word) {
 	// Разпознава дума от малки латински букви
 	char c;
 	int i = 0;
-	while (input >> c && (c >= 'a' && c <= 'z' || c == ' '))
+	while (input.get(c) && (c == ' ' || (c >= 'a' && c <= 'z')))
 		word[i++] = c;
 	if (!input)
 		return false;
@@ -43,7 +43,7 @@ bool RadoInterpreter::parseCommand() {
 bool RadoInterpreter::parseVariable() {
 	// V -> a | ... | z
 	char var;
-	bool success = input >> var && var >='a' && var <= 'z';
+	bool success = input.get(var) && var >='a' && var <= 'z';
 	return success;
 }
 
@@ -91,19 +91,19 @@ bool RadoInterpreter::parseExpression() {
 
 bool RadoInterpreter::parseStatement() {
 	// S -> V = E | #C(E)
-	char c;
+	char c = input.peek();
 	char buffer[MAX_SIZE];
-	if (!(input >> c))
+	if (!input)
 		return false;
 	if (c == '#') {
 		// #C(E)
 		bool success =
+				matchTerminal('#') &&
 				parseCommand() &&
 				matchTerminal('(') &&
 				parseExpression() &&
 				matchTerminal(')');
 		// TODO: действия по изпълнение на командата
-		input.getline(buffer, MAX_SIZE);
 		return success;
 	} else {
 		// V = E
@@ -112,7 +112,6 @@ bool RadoInterpreter::parseStatement() {
 				matchTerminal('=') &&
 				parseExpression();
 		// TODO: действия по присвояване на променливата
-		input.getline(buffer, MAX_SIZE);
 		return success;
 	}
 
@@ -124,8 +123,9 @@ bool RadoInterpreter::execute() {
 		return false;
 
 	// P -> SP | e
-	while (input) {
-		if (!parseStatement())
+	while (input.peek() != EOF) {
+		if (!(parseStatement() &&
+			  matchTerminal('\n')))
 			return false;
 	}
 	return true;
