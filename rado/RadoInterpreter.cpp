@@ -6,7 +6,9 @@
  */
 
 #include <cstring>
+#include <iostream>
 #include "RadoInterpreter.h"
+using namespace std;
 
 RadoInterpreter::RadoInterpreter(const char* filename) :
    input(filename) {
@@ -35,46 +37,66 @@ bool RadoInterpreter::parseWord(char* word) {
 	return true;
 }
 
-bool RadoInterpreter::parseCommand() {
-	char command[MAX_SIZE];
-	return parseWord(command) && strcmp(command, "print") == 0;
-}
-
-bool RadoInterpreter::parseVariable() {
-	// V -> a | ... | z
-	char var;
-	bool success = input.get(var) && var >='a' && var <= 'z';
+bool RadoInterpreter::parseCommand(Command& command) {
+	char commandName[MAX_SIZE];
+	bool success = parseWord(commandName);
+	if (success) {
+		if (strcmp(commandName, PRINT_COMMAND_NAME) == 0) {
+			command = PRINT_COMMAND;
+		} else
+		/*
+		if (strcmp(commandName, XXX_COMMAND_NAME) == 0) {
+			command = XXX_COMMAND;
+		} else
+		*/
+			return false;
+	}
 	return success;
 }
 
-bool RadoInterpreter::parseLiteral() {
-	char literal[MAX_SIZE];
+bool RadoInterpreter::parseVariable(char& var) {
+	// V -> a | ... | z
+	return input.get(var) &&
+			var >='a' && var <= 'z';
+}
+
+bool RadoInterpreter::parseLiteral(char* literal) {
 	return matchTerminal('"') &&
 			parseWord(literal) &&
 			matchTerminal('"');
 }
 
-bool RadoInterpreter::parseTerm() {
+bool RadoInterpreter::parseTerm(char* term) {
 	// T -> L | V
 	char c = input.peek();
 	bool success = false;
-	if (c == '"')
+	if (c == '"') {
 		// L
-		success = parseLiteral();
-	else
-		success = parseVariable();
-	// TODO: действия по пресмятане на терма
+		success = parseLiteral(term);
+	}
+	else {
+		// V
+		char var;
+		success = parseVariable(var);
+		if (success) {
+			strncpy(term, memory[varToIndex(var)], MAX_SIZE);
+			term[MAX_SIZE-1] = '\0';
+		}
+	}
 	return success;
 }
 
-bool RadoInterpreter::parseExpressionTail() {
+bool RadoInterpreter::parseExpressionTail(char* value) {
 	// F -> +E | e
 	char c = input.peek();
 	bool success = false;
 	if (c == '+') {
+		char tailvalue[MAX_SIZE];
 		success = matchTerminal('+') &&
-					  parseExpression();
-		// TODO: действия по пресмятане на ExpressionTail
+					  parseExpression(tailvalue);
+		int value_len = strlen(value) + 1;
+		if (value_len < MAX_SIZE)
+			strncat(value, tailvalue, MAX_SIZE - value_len);
 		return success;
 	}
 	else
@@ -82,36 +104,40 @@ bool RadoInterpreter::parseExpressionTail() {
 
 }
 
-bool RadoInterpreter::parseExpression() {
+bool RadoInterpreter::parseExpression(char* value) {
 	// E -> TF
-	bool success = parseTerm() && parseExpressionTail();
-	// TODO: действия по пресмятане на израза
+	bool success = parseTerm(value) &&
+			   parseExpressionTail(value);
 	return success;
 }
 
 bool RadoInterpreter::parseStatement() {
 	// S -> V = E | #C(E)
 	char c = input.peek();
-	char buffer[MAX_SIZE];
+	char value[MAX_SIZE];
 	if (!input)
 		return false;
 	if (c == '#') {
 		// #C(E)
+		Command command;
 		bool success =
 				matchTerminal('#') &&
-				parseCommand() &&
+				parseCommand(command) &&
 				matchTerminal('(') &&
-				parseExpression() &&
+				parseExpression(value) &&
 				matchTerminal(')');
-		// TODO: действия по изпълнение на командата
+		if (command == PRINT_COMMAND)
+			cout << value << endl;
 		return success;
 	} else {
 		// V = E
+		char var;
 		bool success =
-				parseVariable() &&
+				parseVariable(var) &&
 				matchTerminal('=') &&
-				parseExpression();
-		// TODO: действия по присвояване на променливата
+				parseExpression(value);
+		strncpy(memory[varToIndex(var)], value, MAX_SIZE);
+		memory[varToIndex(var)][MAX_SIZE-1] = '\0';
 		return success;
 	}
 
