@@ -7,7 +7,6 @@
 
 #include <iostream>
 #include "squeue.cpp"
-#include "lstack.cpp"
 using namespace std;
 
 void simpleQueueTest() {
@@ -28,7 +27,7 @@ void pushPopTest() {
 }
 
 int main() {
-	// simpleQueueTest();
+	simpleQueueTest();
 	pushPopTest();
 	return 0;
 }

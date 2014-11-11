@@ -13,7 +13,7 @@ template <typename T>
 class SQueue : public Queue<T> {
 private:
 	T arr[MAX_SIZE];
-	int front, back;
+	int front, back, size;
 	bool full() const;
 public:
 	SQueue();
@@ -23,26 +23,29 @@ public:
 	bool pop(T&);
 	T head() const;
 	bool head(T&) const;
+	int length() const { return size; }
 };
 
 template <typename T>
-SQueue<T>::SQueue() : front(0), back(0) {}
+SQueue<T>::SQueue() : front(0), back(0), size(0) {}
 
 template <typename T>
 bool SQueue<T>::empty() const {
-	return front == back;
+	return size == 0;
 }
 
 template <typename T>
 bool SQueue<T>::full() const {
-	return back == MAX_SIZE;
+	return size == MAX_SIZE;
 }
 
 template <typename T>
 bool SQueue<T>::push(T const& x) {
 	if (full())
 		return false;
-	arr[back++] = x;
+	arr[back] = x;
+	(++back) %= MAX_SIZE;
+	size++;
 	return true;
 }
 
@@ -50,7 +53,11 @@ template <typename T>
 T SQueue<T>::pop() {
 	if (empty())
 		return T();
-	return arr[front++];
+	T x = head();
+	(++front) %= MAX_SIZE;
+	size--;
+	// front++; if (front == MAX_SIZE) front = 0;
+	return x;
 }
 
 template <typename T>
