@@ -120,7 +120,7 @@ void LQueue<T>::clean() {
 }
 
 template <typename T>
-LQueue<T>::LQueue(LQueue<T> const& q) {
+LQueue<T>::LQueue(LQueue<T> const& q) : front(NULL), back(NULL) {
 	copy(q);
 }
 
