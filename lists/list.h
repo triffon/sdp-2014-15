@@ -8,17 +8,35 @@
 #ifndef LIST_H_
 #define LIST_H_
 
+#include <iostream>
+using namespace std;
+
 template <typename T, typename P>
 class List {
+protected:
+	void copy(List const& l) {
+		// за всеки елемент от l
+		// да го добавим в *this
+		// допускаме, че *this е празен
+		for(P it = l.begin(); it; ++it)
+			insertEnd(*it);
+	}
+
+	void clean() {
+		T tmp;
+		while (!empty())
+			deleteBegin(tmp);
+	}
+
 public:
 	// проверява дали списъкът е празен
 	virtual bool empty() const = 0;
 
 	// вмъкване преди
-	virtual void insertBefore(T const&, P const&) = 0;
+	virtual bool insertBefore(T const&, P const&) = 0;
 
 	// вмъкване след
-	virtual void insertAfter(T const&, P const&) = 0;
+	virtual bool insertAfter(T const&, P const&) = 0;
 
 	// изтриване преди
 	virtual bool deleteBefore(T&, P const&) = 0;
@@ -37,6 +55,27 @@ public:
 
 	// позиция в края
 	virtual P end() const = 0;
+
+	// добавяне в началото
+	bool insertBegin(T const& x) {
+		return insertBefore(x, begin());
+	}
+
+	// добавяне в края
+	bool insertEnd(T const& x) {
+		return insertAfter(x, end());
+	}
+
+	// изтриване в началото
+	bool deleteBegin(T& x) {
+		P it = begin();
+		return deleteAt(x, it);
+	}
+
+	// изтриване в края
+	bool deleteEnd(T& x) {
+		return deleteAt(x, end());
+	}
 
 	// виртуален деструктор
 	virtual ~List() {}
@@ -76,6 +115,11 @@ public:
 	virtual ~Iterator() {}
 };
 
-
+template <typename T, typename P>
+ostream& operator<<(ostream& os, List<T, P> const& l) {
+	for(P it = l.begin(); it; ++it)
+		os << *it << ' ';
+	return os << endl;
+}
 
 #endif /* LIST_H_ */
