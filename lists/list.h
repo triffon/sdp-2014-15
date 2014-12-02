@@ -65,19 +65,15 @@ public:
 	virtual Iterator<T>& operator++() = 0;
 
 	// it++;
+	// некоректно, понеже Iterator<T> е абстрактен!!!!
+	// не можем да върнем обект Iterator<T>!
 	// Iterator<T> operator++(int);
 
 	// if (it) ...
 	// проверка за валидност
 	virtual operator bool() const = 0;
 
-	// if (!it) ...
-	// проверка за невалидност
-	virtual bool operator!() const {
-		return !this->operator bool();
-	}
-
-	virtual ~Iterator();
+	virtual ~Iterator() {}
 };
 
 
