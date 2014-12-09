@@ -146,11 +146,60 @@ void testMergeSort() {
 	cout << l;
 }
 
+template <typename T, typename R, typename I>
+R foldr(I it, R (*op)(T, R), R const& nv) {
+	if (!it)
+		return nv;
+	int x = *it++;
+	return op(x, foldr(it, op, nv));
+}
+
+template <typename T, typename R, typename I>
+R foldl(I it, R (*op)(R, T), R const& nv) {
+	R result = nv;
+	for(; it; ++it)
+		result = op(result, *it);
+	return result;
+}
+
+template <typename T, typename I>
+void map(List<T, I>& l, T (*f)(T)) {
+	for(I it = l.begin(); it; ++it)
+		*it = f(*it);
+}
+
+int myplus(int x, int y) {
+	return x + y;
+}
+
+int myproduct(int x, int y) {
+	return x * y;
+}
+
+int mysquared(int x) {
+	return x * x;
+}
+
+void testHigherOrder() {
+	TestList l;
+	for(int i = 1; i <= 10; i++)
+		l.insertEnd(i);
+
+	cout << l;
+
+	cout << "Sum = " << foldr(l.begin(), myplus, 0) << endl;
+	cout << "Product = " << foldl(l.begin(), myproduct, 1) << endl;
+	map(l, mysquared);
+	cout << l;
+}
+
+
 int main() {
-	testLinkedList();
-	testConcatenate();
-	testReverse();
-	testMergeSort();
+	// testLinkedList();
+	// testConcatenate();
+	// testReverse();
+	// testMergeSort();
+	testHigherOrder();
 	return 0;
 }
 
