@@ -6,8 +6,10 @@
  */
 
 #include "linked_list.cpp"
+#include "double_linked_list.cpp"
 
-typedef LinkedList<int> TestList;
+typedef DoubleLinkedList<int> TestList;
+typedef DoubleLinkedListIterator<int> TestIterator;
 
 void testLinkedList() {
 	TestList l;
@@ -16,14 +18,14 @@ void testLinkedList() {
 		l.insertBegin(i);
 	}
 	cout << l;
-	for(LinkedListIterator<int> it = l.begin(); it; ++it) {
+	for(TestIterator it = l.begin(); it; ++it) {
 		if (*it % 2 == 0) {
 			l.insertAfter(*it * 5 + 1, it);
 			l.insertBefore(*it * 10, it);
 		}
 	}
 	cout << l;
-	for(LinkedListIterator<int> it = l.begin(); it; ++it) {
+	for(TestIterator it = l.begin(); it; ++it) {
 		if (*it % 5 == 0) {
 			int x;
 			l.deleteAfter(x, it);
@@ -102,10 +104,9 @@ void merge(List<T, I>& l,
 		l.insertEnd(*it2++);
 }
 
-template <typename T, typename I>
-void mergeSort(List<T, I>& l) {
+void mergeSort(TestList& l) {
 	// 1. разделяне на два подсписъка
-	LinkedList<T> l1, l2;
+	TestList l1, l2;
 	split(l, l1, l2);
 
 	// дъно
@@ -146,9 +147,9 @@ void testMergeSort() {
 }
 
 int main() {
-	// testLinkedList();
-	// testConcatenate();
-	// testReverse();
+	testLinkedList();
+	testConcatenate();
+	testReverse();
 	testMergeSort();
 	return 0;
 }
