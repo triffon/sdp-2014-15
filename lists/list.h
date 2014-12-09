@@ -22,13 +22,13 @@ protected:
 			insertEnd(*it);
 	}
 
+public:
 	void clean() {
 		T tmp;
 		while (!empty())
 			deleteBegin(tmp);
 	}
 
-public:
 	// проверява дали списъкът е празен
 	virtual bool empty() const = 0;
 

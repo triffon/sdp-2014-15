@@ -37,8 +37,119 @@ void testLinkedList() {
 	}
 }
 
+// конкатенация на l2 след l1, резултатът е в l1
+template <typename T, typename I>
+void concatenate(List<T, I>& l1, List<T, I> const& l2) {
+	for(I it = l2.begin(); it; ++it)
+		l1.insertEnd(*it);
+}
+
+void testConcatenate() {
+	TestList l1, l2;
+	int i = 1;
+	for(; i <= 10; i++)
+		l1.insertEnd(i);
+	for(; i <= 20; i++)
+		l2.insertEnd(i);
+
+	concatenate(l1, l2);
+	cout << l1;
+
+}
+
+template <typename T, typename I>
+void reverse(List<T, I>& l) {
+	T x;
+	I it = l.begin();
+	while(l.deleteAfter(x, it))
+		l.insertBegin(x);
+}
+
+void testReverse() {
+	TestList l;
+	for(int i = 1; i <= 10; i++)
+		l.insertEnd(i);
+	reverse(l);
+	cout << l;
+}
+
+// разделяме l на две приблизително равни по дължина части
+// l1 и l2
+template <typename T, typename I>
+void split(List<T, I> const& l,
+		   List<T, I>& l1, List<T, I>& l2) {
+	I it = l.begin();
+	while (it) {
+		l1.insertEnd(*it++);
+		if (it)
+			l2.insertEnd(*it++);
+	}
+}
+
+template <typename T, typename I>
+void merge(List<T, I>& l,
+		   List<T, I> const& l1, List<T, I> const& l2) {
+	I it1 = l1.begin(), it2 = l2.begin();
+	while (it1 && it2)
+		if (*it1 < *it2)
+			l.insertEnd(*it1++);
+		else
+			l.insertEnd(*it2++);
+	// !it1 || !it2
+	while(it1)
+		l.insertEnd(*it1++);
+	while(it2)
+		l.insertEnd(*it2++);
+}
+
+template <typename T, typename I>
+void mergeSort(List<T, I>& l) {
+	// 1. разделяне на два подсписъка
+	LinkedList<T> l1, l2;
+	split(l, l1, l2);
+
+	// дъно
+	if (l1.empty() || l2.empty())
+		return;
+
+	/*
+	cout << "След разделянето " << endl;
+	cout << l1 << ' ' << l2;
+	*/
+
+	// 2. рекурсивно сортиране
+	mergeSort(l1);
+	mergeSort(l2);
+
+	/*
+	cout << "Преди сливането" << endl;
+	cout << l1 << ' ' << l2;
+	*/
+
+	// 3. сливане
+	l.clean();
+	merge(l, l1, l2);
+
+	/*
+	cout << "След сливането" << endl;
+	cout << l << endl;
+	*/
+}
+
+void testMergeSort() {
+	TestList l;
+	for(int i = 1; i <= 10; i++)
+		l.insertEnd(i * 3 % 10 + 1);
+	cout << l;
+	mergeSort(l);
+	cout << l;
+}
+
 int main() {
-	testLinkedList();
+	// testLinkedList();
+	// testConcatenate();
+	// testReverse();
+	testMergeSort();
 	return 0;
 }
 
