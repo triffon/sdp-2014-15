@@ -62,8 +62,10 @@ T SQueue<T>::pop() {
 
 template <typename T>
 bool SQueue<T>::pop(T& x) {
+	if (empty())
+		return false;
 	x = pop();
-	return !empty();
+	return true;
 }
 
 template <typename T>
