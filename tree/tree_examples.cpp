@@ -6,8 +6,10 @@
  */
 
 #include "tree.cpp"
+#include "bintree.cpp"
 
 typedef Tree<int> IntTree;
+typedef BinaryTree<int> BIntTree;
 
 template <typename T>
 void printLevel(Tree<T> const& t, int k) {
@@ -36,8 +38,20 @@ void testTree() {
 	printLevel(t, 3);cout << endl;
 }
 
+void testBinaryTree() {
+	BIntTree t(1,
+			BIntTree(2,
+					BIntTree(3, BIntTree(), BIntTree()),
+					BIntTree(4, BIntTree(), BIntTree())),
+			BIntTree(5,
+					BIntTree(),
+					BIntTree(6, BIntTree(), BIntTree())));
+	cout << t << endl;
+}
+
 int main() {
-	testTree();
+	// testTree();
+	testBinaryTree();
 	return 0;
 }
 
