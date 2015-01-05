@@ -24,9 +24,10 @@ protected:
 
 public:
 	void clean() {
-		T tmp;
-		while (!empty())
+		while (!empty()) {
+			T tmp;
 			deleteBegin(tmp);
+		}
 	}
 
 	// проверява дали списъкът е празен
