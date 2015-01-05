@@ -7,6 +7,7 @@
 
 #include "pushpoplist.cpp"
 #include "linked_list.cpp"
+#include "slist.cpp"
 
 typedef LinkedList<PushPop<int>*> PushPopList;
 
@@ -37,7 +38,33 @@ void testPushPopList() {
 	tq.push(2);
 }
 
+void testSList() {
+	SList l;
+	l.insertEnd(new SInt(1));
+	SList l2;
+	l2.insertEnd(new SInt(2));
+	l.insertEnd(&l2);
+	SList l3;
+	SList l5;
+	l5.insertEnd(new SInt(3));
+	SList l6;
+	l6.insertEnd(new SInt(4));
+	l5.insertEnd(&l6);
+	l3.insertEnd(&l5);
+	l3.insertEnd(new SInt(5));
+	l.insertEnd(&l3);
+	SList l4;
+	l.insertEnd(&l4);
+	l.print();
+	cout << endl;
+
+	LinkedList<int> ints;
+	l.collectInts(ints);
+	cout << ints;
+}
+
 int main() {
-	testPushPopList();
+	// testPushPopList();
+	testSList();
 	return 0;
 }
