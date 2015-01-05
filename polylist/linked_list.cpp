@@ -5,6 +5,9 @@
  *      Author: trifon
  */
 
+#ifndef __LINKED_LIST
+#define __LINKED_LIST
+
 #include "list.h"
 #include <cstddef>
 
@@ -217,3 +220,5 @@ public:
 	}
 
 };
+
+#endif
