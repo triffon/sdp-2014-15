@@ -44,3 +44,6 @@ public:
 	}
 };
 
+template <typename T>
+class TestQueue : public LQueue<T> {
+};

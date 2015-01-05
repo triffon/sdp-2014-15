@@ -33,6 +33,8 @@ void testPushPopList() {
 		}
 		cout << endl;
 	}
+	TestQueue<int> tq;
+	tq.push(2);
 }
 
 int main() {
