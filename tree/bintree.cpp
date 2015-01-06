@@ -68,18 +68,47 @@ template <typename T>
 class BinaryTree {
 private:
 	TreeNode<T>* root;
+	void deleteNode(TreeNode<T>* node) {
+		if (node != NULL) {
+			deleteNode(node->left);
+			deleteNode(node->right);
+			delete node;
+		}
+	}
+
+	TreeNode<T>* copyNode(TreeNode<T>* src) {
+		if (src == NULL)
+			return NULL;
+		return new TreeNode<T>(src->data,
+							copyNode(src->left),
+							copyNode(src->right));
+	}
+
 public:
 	BinaryTree() : root(NULL) {}
+	BinaryTree(T const& data) : root(new TreeNode<T>(data))
+	{}
 	BinaryTree(T const& data,
 			BinaryTree const& left,
 			BinaryTree const& right) {
 		root = new TreeNode<T>(data, left.root, right.root);
 	}
-	BinaryTree(BinaryTree const& bt) {}
-	BinaryTree& operator=(BinaryTree const&) {
+
+	BinaryTree(BinaryTree const& bt) {
+		root = copyNode(bt.root);
+	}
+
+	BinaryTree& operator=(BinaryTree const& bt) {
+		if (this != &bt) {
+			deleteNode(root);
+			root = copyNode(bt.root);
+		}
 		return *this;
 	}
-	~BinaryTree() {}
+
+	~BinaryTree() {
+		deleteNode(root);
+	}
 
 	// !!!TreeNode<T>* getRoot() const { return root; }
 
