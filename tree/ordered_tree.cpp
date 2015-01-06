@@ -23,6 +23,15 @@ private:
 		return *p;
 	}
 
+	TreeNode<T>*& findMin(TreeNode<T>*& node) const {
+		TreeNode<T>** p = &node;
+		while ((*p)->left != NULL)
+			p = &((*p)->left);
+		// (*p)->left == NULL <-> *p е указател към най-
+		// малкия елемент
+		return *p;
+	}
+
 public:
 	/*
 	T* search(T const& data) const {
@@ -86,6 +95,42 @@ public:
 		if (p != NULL)
 			return false;
 		p = new TreeNode<T>(data);
+		return true;
+	}
+
+	bool deleteElement(T const& data) {
+		TreeNode<T>*& p = findNode(data);
+		if (p == NULL)
+			return false;
+		if (p->left == NULL) {
+			// нямаме ляво поддърво
+			TreeNode<T>* q = p;
+			p = p->right;
+			delete q;
+			return true;
+		}
+		if (p->right == NULL) {
+			// нямаме дясно поддърво
+			TreeNode<T>* q = p;
+			p = p->left;
+			delete q;
+			return true;
+		}
+		// имаме и двете поддървета
+		TreeNode<T>*& m = findMin(p->right);
+		// m е псевдоним на указателя към минималния елемент
+		// в дясното поддърво на p
+
+		// записваме най-малкато стойност от дясното поддърво
+		// на мястото на елемента, който ще изтриваме
+		p->data = m->data;
+
+		// изтриваме най-малкия елемент
+		// като закачаме неговото дясно поддърво за родителя му
+		TreeNode<T>*q = m;
+		m = m->right;
+		delete q;
+
 		return true;
 	}
 };

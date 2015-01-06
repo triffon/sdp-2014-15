@@ -148,6 +148,12 @@ void testOrderedTree() {
 		cout << "Има 4 в дървото!\n";
 	if (t.search(2) == NULL)
 		cout << "Няма 2 в дървото!\n";
+	t.deleteElement(3);
+	cout << "Дървото е: " << t << "!" << endl;
+	t.deleteElement(7);
+	cout << "Дървото е: " << t << "!" << endl;
+	t.deleteElement(5);
+	cout << "Дървото е: " << t << "!" << endl;
 	OrderedTree<int> t2;
 	for(int i = 1; i <= 10; i++)
 		t2.addElement(i);
