@@ -5,6 +5,9 @@
  *      Author: trifon
  */
 
+#ifndef __BINTREE_CPP
+#define __BINTREE_CPP
+
 #include <iostream>
 using namespace std;
 
@@ -66,8 +69,9 @@ T BinaryTreeIterator<T>::error;
 
 template <typename T>
 class BinaryTree {
-private:
+protected:
 	TreeNode<T>* root;
+private:
 	void deleteNode(TreeNode<T>* node) {
 		if (node != NULL) {
 			deleteNode(node->left);
@@ -144,3 +148,5 @@ ostream& operator<<(ostream& os, BinaryTreeIterator<T> it) {
 		return os;
 	return os << '(' << *it << ',' << ++it << ',' << it++ << ')';
 }
+
+#endif

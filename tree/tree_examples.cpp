@@ -8,6 +8,7 @@
 #include "tree.cpp"
 #include "bintree.cpp"
 #include "lstack.cpp"
+#include "ordered_tree.cpp"
 
 typedef Tree<int> IntTree;
 typedef BinaryTree<int> BIntTree;
@@ -132,10 +133,32 @@ void testExpressionTree() {
 	cout << calculate(t.iterator()) << endl;
 }
 
+void testOrderedTree() {
+	OrderedTree<int> t;
+	t.addElement(3);
+	t.addElement(1);
+	t.addElement(5);
+	t.addElement(5);
+	t.addElement(7);
+	t.addElement(9);
+	t.addElement(4);
+	t.addElement(8);
+	cout << "Дървото е: " << t << "!" << endl;
+	if (t.search(4) != NULL)
+		cout << "Има 4 в дървото!\n";
+	if (t.search(2) == NULL)
+		cout << "Няма 2 в дървото!\n";
+	OrderedTree<int> t2;
+	for(int i = 1; i <= 10; i++)
+		t2.addElement(i);
+	cout << t2 << endl;
+}
+
 int main() {
 	// testTree();
 	// testBinaryTree();
-	testExpressionTree();
+	// testExpressionTree();
+	testOrderedTree();
 	return 0;
 }
 
