@@ -11,7 +11,20 @@ template <typename T>
 // считаме, че операциите <, >, <=, >=, ==, != дефинират
 // линейна наредба над T
 class OrderedTree : public BinaryTree<T> {
+private:
+	TreeNode<T>*& findNode(T const& data) {
+		TreeNode<T>** p = &(this->root);
+		while (*p != NULL && (*p)->data != data) {
+			if (data < (*p)->data)
+				p = &((*p)->left);
+			else
+				p = &((*p)->right);
+		}
+		return *p;
+	}
+
 public:
+	/*
 	T* search(T const& data) const {
 		BinaryTreeIterator<T> it = this->iterator();
 		while (it && data != *it)
@@ -26,7 +39,16 @@ public:
 			return NULL;
 		return &*it;
 	}
+	*/
 
+	T* search(T const& data) {
+		TreeNode<T>*& p = findNode(data);
+		if (p == NULL)
+			return NULL;
+		return &p->data;
+	}
+
+	/*
 	bool addElement(T const& data) {
 		TreeNode<T>* p = this->root;
 		if (this->root == NULL) {
@@ -56,6 +78,15 @@ public:
 		// когато сме намерили data (тогава грешка)
 		// p->data == data
 		return false;
+	}
+	*/
+
+	bool addElement(T const& data) {
+		TreeNode<T>*& p = findNode(data);
+		if (p != NULL)
+			return false;
+		p = new TreeNode<T>(data);
+		return true;
 	}
 };
 
