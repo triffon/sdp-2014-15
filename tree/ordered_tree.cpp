@@ -29,24 +29,34 @@ public:
 
 	bool addElement(T const& data) {
 		TreeNode<T>* p = this->root;
-		while (p != NULL && p->data != data) {
+		if (this->root == NULL) {
+			this->root = new TreeNode<T>(data);
+			return true;
+		} else
+		while (p->data != data)
 			if (data < p->data)
-				p = p->left;
+				if (p->left == NULL) {
+					p->left = new TreeNode<T>(data);
+					return true;
+				}
+				else
+					p = p->left;
 			else
-				p = p->right;
-		}
+				// data > p->data
+				if (p->right == NULL) {
+					p->right = new TreeNode<T>(data);
+					return true;
+				}
+				else
+					p = p->right;
 		// когато сме намерили мястото на data и там няма нищо
 		// (тогава вмъкваме)
 		// p == NULL
 		// ИЛИ
 		// когато сме намерили data (тогава грешка)
 		// p->data == data
-		if (p != NULL)
-			return false;
-		p = new TreeNode<T>(data);
-		return true;
+		return false;
 	}
-
 };
 
 
