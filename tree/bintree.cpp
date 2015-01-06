@@ -84,14 +84,29 @@ private:
 							copyNode(src->right));
 	}
 
+	void adoptLeft(TreeNode<T>*& node) {
+		adopt(root->left, node);
+	}
+
+	void adoptRight(TreeNode<T>*& node) {
+		adopt(root->right, node);
+	}
+
+	void adopt(TreeNode<T>*& newNode, TreeNode<T>*& oldNode) {
+		newNode = oldNode;
+		oldNode = NULL;
+	}
+
 public:
 	BinaryTree() : root(NULL) {}
 	BinaryTree(T const& data) : root(new TreeNode<T>(data))
 	{}
 	BinaryTree(T const& data,
-			BinaryTree const& left,
-			BinaryTree const& right) {
-		root = new TreeNode<T>(data, left.root, right.root);
+			BinaryTree& left,
+			BinaryTree& right) {
+		root = new TreeNode<T>(data);
+		adoptLeft(left.root);
+		adoptRight(right.root);
 	}
 
 	BinaryTree(BinaryTree const& bt) {

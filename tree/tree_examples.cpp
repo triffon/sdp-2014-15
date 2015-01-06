@@ -39,13 +39,13 @@ void testTree() {
 }
 
 void testBinaryTree() {
-	BIntTree t(1,
-			BIntTree(2,
-					BIntTree(3, BIntTree(), BIntTree()),
-					BIntTree(4, BIntTree(), BIntTree())),
-			BIntTree(5,
-					BIntTree(),
-					BIntTree(6, BIntTree(), BIntTree())));
+	BIntTree empty;
+	BIntTree t4(4, empty, empty);
+	BIntTree t3(3, empty, empty);
+	BIntTree t6(6, empty, empty);
+	BIntTree t2(2, t3, t4);
+	BIntTree t5(5, empty, t6);
+	BIntTree t(1, t2, t5);
 	cout << t << endl;
 }
 
