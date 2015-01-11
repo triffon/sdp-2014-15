@@ -66,7 +66,7 @@ public:
 	// it--
 	DoubleLinkedListIterator<T> operator--(int) {
 		DoubleListElement<T>* oldptr = ptr;
-		++(*this);
+		--(*this);
 		return oldptr;
 	}
 
