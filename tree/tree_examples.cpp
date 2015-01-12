@@ -160,11 +160,33 @@ void testOrderedTree() {
 	cout << t2 << endl;
 }
 
+template <typename T>
+void generateTree(T* a, int n, BinaryTree<T>& tree) {
+	if (n == 0)
+		return;
+	int mid = n / 2;
+	BinaryTree<T> left, right;
+	generateTree(a, mid, left);
+	generateTree(a + mid + 1, n - mid - 1, right);
+	tree.createTree(a[mid], left, right);
+}
+
+void testIBTree() {
+	int a[MAX];
+	int const N = 20;
+	for(int i = 0; i< N; i++)
+		a[i] = i + 1;
+	BinaryTree<int> t;
+	generateTree(a, N, t);
+	cout << t << endl;
+}
+
 int main() {
 	// testTree();
 	// testBinaryTree();
 	// testExpressionTree();
-	testOrderedTree();
+	// testOrderedTree();
+	testIBTree();
 	return 0;
 }
 

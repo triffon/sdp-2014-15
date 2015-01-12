@@ -107,7 +107,14 @@ public:
 	{}
 	BinaryTree(T const& data,
 			BinaryTree& left,
+			BinaryTree& right) : root(NULL) {
+		createTree(data, left, right);
+	}
+
+	void createTree(T const& data,
+			BinaryTree& left,
 			BinaryTree& right) {
+		deleteNode(root);
 		root = new TreeNode<T>(data);
 		adoptLeft(left.root);
 		adoptRight(right.root);
