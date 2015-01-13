@@ -74,7 +74,8 @@ public:
 
 	// изтриване в края
 	bool deleteEnd(T& x) {
-		return deleteAt(x, end());
+		P it = end();
+		return deleteAt(x, it);
 	}
 
 	// виртуален деструктор
