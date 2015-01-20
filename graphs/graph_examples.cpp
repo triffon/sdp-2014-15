@@ -145,14 +145,99 @@ void findAllPaths(Graph<V> const& g, V const& a, V const& b) {
 	findAllPathsRec(g, a, b, path);
 }
 
+template <typename V>
+bool hasCycleFrom(Graph<V> const& g, LinkedList<V>& visited,
+				  V const& a) {
+	if(member(visited, a))
+		return true;
+	visited.insertEnd(a);
+	for(LinkedListIterator<V> it = g.successors(a); it; ++it)
+		if (hasCycleFrom(g, visited, *it))
+			return true;
+	return false;
+}
+
+template <typename V>
+bool hasCycle(Graph<V> const& g) {
+	LinkedList<V> visited, vertices = g.vertices();
+	for(LinkedListIterator<V> it = vertices.begin(); it; ++it)
+		if (!member(visited, *it) &&
+				hasCycleFrom(g, visited, *it))
+			return true;
+	return false;
+}
+
+template <typename V>
+struct Edge {
+	V from, to;
+
+	Edge(V const& _from = V(), V const& _to = V()) :
+		from(_from), to(_to) {}
+	bool operator==(Edge const& e) const {
+		return e.from == from && e.to == to;
+	}
+	bool operator!=(Edge const& e) const {
+		return e.from != from || e.to != to;
+	}
+};
+
+template <typename V>
+ostream& operator<<(ostream& os, Edge<V> const& e) {
+	return os << '(' << e.from << ',' << e.to << ')';
+}
+
+template <typename V>
+bool findPathBFS(Graph<V> const& g, V const& a, V const& b) {
+	LinkedList<Edge<V> > toVisit;
+	toVisit.insertEnd(Edge<V>(a,a));
+	LinkedListIterator<Edge<V> > it = toVisit.begin();
+	while (it && (*it).to != b) {
+		for(LinkedListIterator<V> sit = g.successors((*it).to); sit; ++sit) {
+			Edge<V> e((*it).to, *sit);
+			if (!member(toVisit.begin(), e))
+				toVisit.insertEnd(e);
+		}
+		++it;
+	}
+	// !it      <-> обходили сме всички върхове
+	// (*it).to == b <-> намерили сме път
+	if (it) {
+		// извеждаме пътя
+		LinkedList<V> path;
+		path.insertEnd(b);
+		// насочваме итератора към (x,u) и повтаряме
+		// докога? когато x == a приключваме!
+		while ((*it).from != a) {
+			// Нека *it == (u,v)
+			V u = (*it).from;
+			// добавяме u във пътя path
+			path.insertBegin(u);
+			// търсим първото ребро от вида (x,u) в toVisit
+			it = toVisit.begin();
+			while (it && (*it).to != u)
+				++it;
+			// сега *it == (x,u)
+		}
+		path.insertBegin(a);
+		cout << path << endl;
+		return true;
+	}
+	return false;
+}
+
 int main() {
 	IntGraph g = sampleGraph();
 	printGraph(g);
 	printDFS(g, 1);
 	printBFS(g, 1);
-	cout << "->" << findPath(g, 1, 5) << "<-" << endl;
-	cout << "->" << findPath2(g, 1, 5) << "<-" << endl;
+	cout << "findPath: ";
+	cout << findPath(g, 1, 5) << endl;
+	cout << "findPathBFS: ";
+	cout << findPathBFS(g, 1, 5) << endl;
+	cout << "findPath2: ";
+	cout << findPath2(g, 1, 5) << endl;
 	findAllPaths(g, 1, 6);
+	cout << "Has cycle? " << hasCycle(g) << endl;
 	g = fullGraph(200);
 	cout << "findPath:\n";
 	cout << findPath(g, 1, 200);
