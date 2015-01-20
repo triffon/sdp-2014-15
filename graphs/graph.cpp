@@ -14,6 +14,11 @@ bool member(LinkedListIterator<T> it, T const& x) {
 	return it;
 }
 
+template <typename T>
+bool member(LinkedList<T> const& l, T const& x) {
+	return member(l.begin(), x);
+}
+
 template <typename V>
 class Graph {
 private:
