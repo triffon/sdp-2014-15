@@ -150,7 +150,7 @@ template <typename T, typename R, typename I>
 R foldr(I it, R (*op)(T, R), R const& nv) {
 	if (!it)
 		return nv;
-	int x = *it++;
+	T x = *it++;
 	return op(x, foldr(it, op, nv));
 }
 
